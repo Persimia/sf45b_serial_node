@@ -10,12 +10,19 @@ find_package(ament_cmake REQUIRED)
 # uncomment the following section in order to fill in
 # further dependencies manually.
 # find_package(<dependency> REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(std_msgs REQUIRED)
+find_package(sensor_msgs REQUIRED)
 
-add_executable(spoofer src/spoofer.cpp)
+include_directories(include/sf45b_serial_node)
+
+add_executable(spoofer src/spoofer.cpp src/crc.cpp src/SIM_PS_LightWare_SF45B.cpp)
 target_include_directories(spoofer PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>)
 target_compile_features(spoofer PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
+ament_target_dependencies(spoofer rclcpp std_msgs sensor_msgs)
+
 
 install(TARGETS spoofer
   DESTINATION lib/${PROJECT_NAME})
